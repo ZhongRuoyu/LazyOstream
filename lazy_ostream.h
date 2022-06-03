@@ -1,18 +1,21 @@
 #include <iostream>
+#include <ostream>
 
 class Voidifier {
 public:
   template <typename T> void operator=(const T) {}
 };
 
-class LazyOstream {
+template <class CharT, class Traits> class LazyOstream {
 private:
-  std::ostream &ostream_;
+  using OstreamT = std::basic_ostream<CharT, Traits>;
+
+  OstreamT &ostream_;
 
 public:
-  LazyOstream(std::ostream &ostream) : ostream_(ostream) {}
+  LazyOstream(OstreamT &ostream) : ostream_(ostream) {}
 
-  LazyOstream &operator<<(std::ostream &(*f)(std::ostream &)) {
+  LazyOstream &operator<<(OstreamT &(*f)(OstreamT &)) {
     (*f)(this->ostream_);
     return *this;
   }
